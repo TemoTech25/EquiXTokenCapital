@@ -1,0 +1,392 @@
+// This Prisma schema captures the core EquiXToken Capital domain.
+// Run `npx prisma migrate dev` after editing (PostgreSQL).
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Tenant {
+  id        String   @id @default(cuid())
+  name      String
+  slug      String   @unique
+  themeJson Json?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  hedera   HederaConfig?
+  policies TenantPolicy?
+  users    User[]
+  cases    Case[]
+  tokens   Token[]
+  offerings Offering[]
+  documents Document[]
+  policyDecisions PolicyDecision[]
+}
+
+model HederaConfig {
+  id              String   @id @default(cuid())
+  tenantId        String   @unique
+  network         String
+  operatorId      String
+  operatorKeyEnc  String
+  hcsAuditTopicId String?
+  hcsDocsTopicId  String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  tenant Tenant @relation(fields: [tenantId], references: [id])
+}
+
+model TenantPolicy {
+  id             String  @id @default(cuid())
+  tenantId       String  @unique
+  allowCustodial Boolean @default(true)
+  requireKycTier Int     @default(1)
+  allowedRails   String  @default("BANK,STABLECOIN")
+  maxTxUsd       Int     @default(100000)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  tenant Tenant @relation(fields: [tenantId], references: [id])
+}
+
+model User {
+  id           String   @id @default(cuid())
+  tenantId     String
+  email        String   @unique
+  phone        String?
+  passwordHash String
+  role         String
+  walletAddr   String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  tenant Tenant @relation(fields: [tenantId], references: [id])
+  cases  Case[] @relation("CaseAssignees")
+}
+
+model Case {
+  id            String   @id @default(cuid())
+  tenantId      String
+  title         String
+  propertyId    String?
+  municipality  String
+  bankRef       String?
+  priceCents    Int
+  rail          String
+  stage         CaseStage @default(INTAKE)
+  slaAt         DateTime?
+  assignedToId  String?
+  escrowId      String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  tenant     Tenant @relation(fields: [tenantId], references: [id])
+  assignedTo User?  @relation("CaseAssignees", fields: [assignedToId], references: [id])
+  parties    Party[]
+  documents  Document[] @relation("CaseDocuments")
+  escrow     Escrow?
+  receipts   Receipt[]
+  certificates Certificate[]
+}
+
+enum CaseStage {
+  INTAKE
+  KYC
+  ESCROW
+  CERTS
+  LODGEMENT
+  REGISTRATION
+  CLOSED
+}
+
+model Party {
+  id        String   @id @default(cuid())
+  caseId    String
+  type      PartyType
+  userId    String?
+  name      String
+  email     String?
+  phone     String?
+  kycStatus KycStatus @default(NOT_STARTED)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  case Case @relation(fields: [caseId], references: [id])
+}
+
+enum PartyType {
+  BUYER
+  SELLER
+  CONVEYANCER
+  AGENT
+  MUNICIPALITY
+  BANK
+  DEVELOPER
+}
+
+enum KycStatus {
+  NOT_STARTED
+  IN_PROGRESS
+  PASS
+  REVIEW
+  FAIL
+}
+
+model Document {
+  id          String   @id @default(cuid())
+  tenantId    String
+  caseId      String?
+  name        String
+  type        DocumentType
+  s3Key       String
+  sha256      String
+  version     Int      @default(1)
+  signedAt    DateTime?
+  anchoredHcsMsgId String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  tenant Tenant @relation(fields: [tenantId], references: [id])
+  case   Case?  @relation("CaseDocuments", fields: [caseId], references: [id])
+}
+
+enum DocumentType {
+  OTP
+  DEED
+  RECEIPT
+  CERT
+  OTHER
+}
+
+model Escrow {
+  id             String   @id @default(cuid())
+  caseId         String   @unique
+  rail           String
+  amountTinybars BigInt
+  status         EscrowStatus @default(DRAFT)
+  conditionsJson Json
+  splitsJson     Json
+  approvalsJson  Json
+  ledgerRef      String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  case Case @relation(fields: [caseId], references: [id])
+}
+
+enum EscrowStatus {
+  DRAFT
+  FUNDED
+  RELEASED
+  REFUNDED
+}
+
+model Receipt {
+  id        String   @id @default(cuid())
+  caseId    String
+  kind      ReceiptKind
+  ref       String
+  issuedAt  DateTime
+  docId     String?
+  hcsMsgId  String?
+  createdAt DateTime @default(now())
+
+  case Case @relation(fields: [caseId], references: [id])
+}
+
+enum ReceiptKind {
+  DUTY
+  RATES
+  LODGEMENT
+  OTHER
+}
+
+model Certificate {
+  id        String   @id @default(cuid())
+  caseId    String
+  kind      CertificateKind
+  status    CertificateStatus @default(REQUESTED)
+  docId     String?
+  hcsMsgId  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  case Case @relation(fields: [caseId], references: [id])
+}
+
+enum CertificateKind {
+  ELECTRICAL
+  PLUMBING
+  RATES
+  OTHER
+}
+
+enum CertificateStatus {
+  REQUESTED
+  RECEIVED
+  REJECTED
+}
+
+model Token {
+  id        String   @id @default(cuid())
+  tenantId  String
+  name      String
+  description String?
+  symbol    String
+  type      TokenType
+  htsId     String?
+  associatedCaseId String?
+  rulesJson Json
+  spvJson   Json?
+  holdersJson Json?
+  complianceJson Json?
+  supply    BigInt?
+  decimals  Int?
+  status    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  tenant Tenant @relation(fields: [tenantId], references: [id])
+  offerings Offering[]
+}
+
+enum TokenType {
+  NFT
+  FT
+}
+
+model Offering {
+  id         String   @id @default(cuid())
+  tenantId   String
+  title      String
+  location   String
+  issuer     String
+  thumbnail  String?
+  targetCents Int
+  raisedCents Int @default(0)
+  minTicketCents Int @default(0)
+  status     OfferingStatus @default(DRAFT)
+  tokenId    String?
+  escrowId   String?
+  kycTierReq Int @default(1)
+  eligibilityJson Json?
+  impactSummary String?
+  closingDate DateTime?
+  metadataJson Json?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  tenant     Tenant @relation(fields: [tenantId], references: [id])
+  token      Token?  @relation(fields: [tokenId], references: [id])
+  investments Investment[]
+}
+
+enum OfferingStatus {
+  DRAFT
+  LIVE
+  PAUSED
+  CLOSED
+}
+
+model Investment {
+  id         String   @id @default(cuid())
+  offeringId String
+  userId     String?
+  amountCents Int
+  rail       String
+  status     InvestmentStatus @default(PENDING)
+  txRef      String?
+  metadataJson Json?
+  createdAt  DateTime @default(now())
+
+  offering Offering @relation(fields: [offeringId], references: [id])
+}
+
+enum InvestmentStatus {
+  PENDING
+  CONFIRMED
+  FAILED
+}
+
+model PolicyDecision {
+  id          String   @id @default(cuid())
+  tenantId    String
+  subjectType String
+  subjectId   String
+  ruleId      String
+  outcome     String
+  rationaleJson Json
+  createdAt   DateTime @default(now())
+
+  tenant Tenant @relation(fields: [tenantId], references: [id])
+}
+
+model EventOutbox {
+  id        String   @id @default(cuid())
+  topic     String
+  payloadJson Json
+  status    EventOutboxStatus @default(PENDING)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum EventOutboxStatus {
+  PENDING
+  SENT
+  FAILED
+}
+
+model Anchor {
+  id          String   @id @default(cuid())
+  subjectType String
+  subjectId   String
+  sha256      String
+  hcsTopicId  String?
+  hcsMsgId    String?
+  createdAt   DateTime @default(now())
+}
+
+model Audit {
+  id          String   @id @default(cuid())
+  userId      String?
+  action      String
+  subjectType String
+  subjectId   String
+  metaJson    Json
+  createdAt   DateTime @default(now())
+}
+
+model WalletSession {
+  id         String   @id @default(cuid())
+  tenantId   String
+  userId     String
+  accountId  String
+  publicKey  String
+  topic      String
+  createdAt  DateTime @default(now())
+  lastSeenAt DateTime @default(now())
+}
+
+model SignIntent {
+  id          String   @id @default(cuid())
+  tenantId    String
+  userId      String
+  accountId   String
+  type        String
+  paramsJson  Json
+  previewJson Json
+  nonce       String
+  status      String @default("PENDING")
+  expiresAt   DateTime
+  txId        String?
+  consensusAt DateTime?
+  error       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}

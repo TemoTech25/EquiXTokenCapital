@@ -1,0 +1,11 @@
+{
+  "contractName": "DataTypes",
+  "abi": [],
+  "bytecode": {
+    "object": "6080806040523460175760399081601c823930815050f35b5f80fdfe5f80fdfea26469706673582212204f2fda11e77423c68b5d1aa4c97f1284edae525d19da83b56af2b18753b0e7f864736f6c634300081a0033"
+  },
+  "deployedBytecode": {
+    "object": "5f80fdfea26469706673582212204f2fda11e77423c68b5d1aa4c97f1284edae525d19da83b56af2b18753b0e7f864736f6c634300081a0033"
+  },
+  "metadata": "{\"compiler\":{\"version\":\"0.8.26+commit.8a97fa7a\"},\"language\":\"Solidity\",\"output\":{\"abi\":[],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"title\":\"DataTypes\",\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"notice\":\"Shared structs and enums reused across the EquiXToken Capital smart-contract suite.\",\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/common/DataTypes.sol\":\"DataTypes\"},\"evmVersion\":\"cancun\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[],\"viaIR\":true},\"sources\":{\"contracts/common/DataTypes.sol\":{\"keccak256\":\"0xcb7d89aee1519737bfe6f399ba2487171b15a66c451d9aa5e12371a65c68d850\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://3cf3c69599b6ec5bc8384f24caab21132b103d138f8e0786ca3e088492f7e74b\",\"dweb:/ipfs/Qmc3YmKdA8BkfrQ8StDB5pXEPKWRgMADfjiaSGb29JF29M\"]}},\"version\":1}"
+}

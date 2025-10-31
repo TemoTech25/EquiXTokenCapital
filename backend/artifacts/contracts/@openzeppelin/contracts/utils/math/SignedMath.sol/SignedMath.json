@@ -1,0 +1,11 @@
+{
+  "contractName": "SignedMath",
+  "abi": [],
+  "bytecode": {
+    "object": "6080806040523460175760399081601c823930815050f35b5f80fdfe5f80fdfea26469706673582212207fab5f7707c5f47b351eb29221f6de7fa7f71fa46dbe9dbb702244bda939f95c64736f6c634300081a0033"
+  },
+  "deployedBytecode": {
+    "object": "5f80fdfea26469706673582212207fab5f7707c5f47b351eb29221f6de7fa7f71fa46dbe9dbb702244bda939f95c64736f6c634300081a0033"
+  },
+  "metadata": "{\"compiler\":{\"version\":\"0.8.26+commit.8a97fa7a\"},\"language\":\"Solidity\",\"output\":{\"abi\":[],\"devdoc\":{\"details\":\"Standard signed math utilities missing in the Solidity language.\",\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"@openzeppelin/contracts/utils/math/SignedMath.sol\":\"SignedMath\"},\"evmVersion\":\"cancun\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[],\"viaIR\":true},\"sources\":{\"@openzeppelin/contracts/utils/math/SignedMath.sol\":{\"keccak256\":\"0xf92515413956f529d95977adc9b0567d583c6203fc31ab1c23824c35187e3ddc\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://c50fcc459e49a9858b6d8ad5f911295cb7c9ab57567845a250bf0153f84a95c7\",\"dweb:/ipfs/QmcEW85JRzvDkQggxiBBLVAasXWdkhEysqypj9EaB6H2g6\"]}},\"version\":1}"
+}
