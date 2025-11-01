@@ -1,87 +1,157 @@
 # EquiXToken Capital
 
-EquiXToken Capital is a full-stack platform that transforms African real estate transactions into programmable digital assets. It delivers:
+> **Revolutionising real estate ownership and transfers through tokenisation, AI, and Hedera Hashgraph.**
 
-* **Transfer Automation** – orchestrates the entire OTP ➜ KYC ➜ escrow ➜ municipal certificates ➜ deeds registration pipeline with role-based workspaces for conveyancers, municipalities, banks, and buyers/sellers.
-* **Tokenisation Studio** – mints Hedera HTS NFT “Title Twins” and KYC-gated FT fractions for SPV shares, enabling fractional ownership and compliance-aware liquidity.
-* **Payments & Escrow** – programmable bank and stablecoin escrows with multi-party approvals, Hedera smart-contract releases, and auditable statements.
-* **Document / Compliance Hub** – AI-assisted document checks, KYC/KYB policy engine, HCS anchoring for immutable audit trails, and S3-backed encrypted storage.
+EquiXToken Capital is a blockchain-powered SaaS platform that transforms how property is bought, sold, financed, and owned. We are building the digital rails for the real-estate economy—delivering property tokenisation, automated transfer workflows, digital title deeds, and fractional investment, all secured on Hedera Hashgraph.
 
-The repository is organised as a monorepo:
+Our mission is to reduce the cost and friction of property transactions, automate complex legal workflows, and make property ownership accessible to everyone—from conveyancers and developers to diaspora investors.
+
+---
+
+## 📦 What’s in the Repository?
 
 ```
 /
-├── backend      # Node.js (Express + Prisma) API
-├── frontend     # Next.js 14 + React 18 + Tailwind + shadcn/ui
-├── contracts    # Solidity smart contracts (tokenisation, escrow, registry)
-├── docs         # Product / UX documentation
-├── infra        # Provisioning scripts / Terraform (WIP)
-└── scripts      # Hedera deployment, Solidity compilation helpers, etc.
+├── backend      # Node.js (Express/Fastify-style) API, Prisma ORM, Hedera + S3 integrations
+├── frontend     # Next.js 14 + React 18 + TailwindCSS + shadcn/ui multi-tenant SaaS
+├── contracts    # Solidity smart contracts (tokenisation, escrow, compliance buses)
+├── docs         # Product briefs, UX specs, compliance notes
+├── infra        # Infrastructure-as-code stubs (Terraform/Kubernetes WIP)
+├── scripts      # Hedera deployment + Solidity compilation tooling
+└── test         # Integration/spec scaffolding (Vitest, Playwright to be expanded)
 ```
 
 ---
 
-## Architecture Overview
+## 🌍 Platform Overview
 
-| Layer            | Tech Stack/Role                                                                                                                 |
-|------------------|----------------------------------------------------------------------------------------------------------------------------------|
-| **Frontend**     | Next.js 14 (App Router) + React 18 + TypeScript + Tailwind + shadcn/ui. Provides multi-tenant, role-aware SaaS experience.      |
-| **Backend**      | Node.js (Express) + TypeScript + Prisma ORM. Exposes REST APIs for cases, documents, escrow, tokens, compliance, and wallet auth. |
-| **Database**     | PostgreSQL (Prisma-managed schema for tenants, cases, documents, escrow, tokens, offerings, audits, etc.).                      |
-| **Cache / Queue**| Redis Cloud (session cache, idempotency tracking, future task queues).                                                           |
-| **Storage**      | S3-compatible bucket for encrypted document storage; metadata + hashing via Hedera HCS.                                          |
-| **Blockchain**   | Hedera Hashgraph stack:                                                                                                         |
-|                  | • HTS (tokenisation: NFT title twins, FT fractional shares)                                                                     |
-|                  | • Smart Contracts Service (programmable escrow / distributions)                                                                 |
-|                  | • Consensus Service (HCS) for immutable event and document hash logs                                                             |
-|                  | • Mirror Node REST for state / audit queries                                                                                    |
-| **AI Services**  | Pluggable endpoints for document checks, KYC decisioning, policy explanations (default stubs until provider keys supplied).     |
-
-### Why Hedera?
-
-1. **Finality + Throughput** – predictable 3-5 second finality with low fees, ideal for real estate workflows that require immutable audit trails.
-2. **Token Service simplicity** – HTS handles mint/burn/freeze/whitelist logic out of the box (no custom ERC-20/721 smart contracts to audit).
-3. **Sustainability** – carbon negative public network that aligns with ESG commitments (crucial for African property projects).
-4. **Native HCS + Smart Contracts** – HCS provides tamper-proof logging for KYC events, document hashes, escrow milestones; smart contracts enforce release conditions.
+| Layer                      | Description                                                                                                                                      |
+|---------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------|
+| **Property Tokenisation** | Convert real-world property into digital tokens with Hedera HTS (NFT “Title Twins” & FT fractions) so ownership becomes liquid and programmable. |
+| **Smart Escrow & Registry** | Hedera Smart Contracts automate fund release once municipal certificates, KYC, and compliance checks complete; registry changes are immutable. |
+| **Digital Title Deeds**   | E-signed, legally verifiable deeds stored on Hedera File Service (HFS) with hashes logged on Hedera Consensus Service (HCS).                     |
+| **AI Compliance & KYC**   | AI agents (LangChain + Eliza OS) ingest documents, run AML/KYC, and produce audit-ready policy outcomes anchored on-chain.                       |
+| **Unified SaaS Workspace**| Conveyancers, municipalities, banks, developers, and investors collaborate in a single, role-aware workbench.                                   |
+| **Investment Marketplace**| Fractional property investment, developer fundraising, and stablecoin remittances ( diaspora participation encouraged).                         |
 
 ---
 
-## Quickstart
+## 🧠 Built With
+
+| Layer            | Tools / Services                                                                                               |
+|------------------|-----------------------------------------------------------------------------------------------------------------|
+| **Frontend**     | Next.js 14, React 18, TypeScript, TailwindCSS, shadcn/ui                                                        |
+| **Backend**      | Node.js, Express-style modules, Prisma ORM, PostgreSQL, Redis                                                   |
+| **Blockchain**   | Hedera HTS (tokenisation), HCS (auditing), HFS (document anchoring), Smart Contracts Service (escrow automation)|
+| **Wallet**       | HashPack via HashConnect (user pairing, digital signatures)                                                     |
+| **AI Layer**     | LangChain, Eliza OS, bespoke compliance agents (plug in KYC providers)                                         |
+| **Storage**      | AWS S3-compatible bucket for encrypted document storage                                                         |
+
+---
+
+## ⚙️ Architecture Overview
+
+### Tokenisation Engine
+- Converts physical property records into digital assets using HTS.
+- Supports both whole-title NFTs (“Title Twins”) and fractional fungible tokens for SPV share classes.
+- Enforces compliance via whitelist, transfer restrictions, and holding limits.
+
+### Smart Escrow & Registry Layer
+- Hedera Smart Contracts enforce conditional payouts to beneficiaries once legal & municipal checks are satisfied.
+- Escrow events & document hashes are anchored to HCS providing an immutable audit trail.
+- Case registry synchronises deed registration with token ownership updates.
+
+### AI Compliance Engine
+- AI agents orchestrated via LangChain + Eliza OS perform KYC/KYB, AML, sanctions, and document validation.
+- Policy results feed into the backend’s Compliance Oracle and are hashed on-chain for evidentiary integrity.
+
+### Marketplace & Capital Raising
+- Connects tokenised projects with retail and institutional investors.
+- Supports stablecoin rails for diaspora remittances, cross-border compliance, and developer offerings.
+- Integrates with custodial sub-wallets for unbanked users (coming in roadmap).
+
+### Digital Title Deed System
+- Replaces paper-based deeds with cryptographically verifiable, e-signed records.
+- Uses HFS for storage, HCS for timestamped hashing, and the Hedera Mirror node for audit queries.
+- Intermediary portal generates post-registration packs and multi-party approvals.
+
+---
+
+## 💡 Why Hedera?
+
+1. **Predictable Finality & Fees** – Hedera offers 3-5 second finality with low fees, ideal for legal-grade workflows that require deterministic settlement.
+2. **HTS Native Controls** – Built-in features (freeze, KYC, custom fees, whitelist) minimize bespoke smart contracts and audit overhead.
+3. **Carbon Negative & ESG-aligned** – Supports sustainability mandates important to African infrastructure projects.
+4. **Consensus + File Services** – HCS and HFS give us tamper-proof timelines and document anchoring, reducing reliance on third-party notaries.
+
+---
+
+## 🚀 Vision & Roadmap
+
+| Phase | Timeline | Focus                                                                                                      |
+|-------|----------|------------------------------------------------------------------------------------------------------------|
+| Phase 1 (MVP) | 2025 | Tokenisation, smart escrow, compliance AI, digital deeds (current build).                               |
+| Phase 2 | 2026 | Launch marketplace, stablecoin remittances, fractional ownership tooling.                                    |
+| Phase 3 | 2027 | DeFi lending, global investor onboarding, secondary trading modules.                                         |
+| Phase 4 | 2028–2030 | EquiXToken Protocol – global infrastructure for real-estate banking-as-a-service.                       |
+
+**Business Model Highlights**
+- Asset tokenisation service fees.
+- Transaction fees (escrow releases, title transfers).
+- SaaS subscriptions for intermediaries (law firms, developers, municipalities).
+- White-label API licensing for enterprise clients.
+- Marketplace commissions on investment campaigns / secondary trades.
+
+**Financial Snapshot**
+
+| Year | Revenue | Operating Expenses | Net Income | Cumulative EBIT |
+|------|---------|--------------------|------------|-----------------|
+| 2025 | $435,000 | $280,000 | $155,000 | $131,750 |
+| 2026 | $900,000 | $450,000 | $450,000 | $515,000 |
+| 2027 | $1,700,000 | $800,000 | $900,000 | $1,280,000 |
+
+---
+
+## 🏛️ Detailed Feature Matrix
+
+| Module | What Happens | Hedera Touchpoints |
+|--------|--------------|--------------------|
+| **Case Management** | Conveyancers capture OTP, assign tasks, track municipal certificates, and orchestrate escrow releases. | HCS logs (OTP hash, certificate statuses). |
+| **Digital Title Twin** | Post-registration, case updates mint NFT “Title Twins” and fractional FTs on HTS, reflecting new ownership. | HTS issuance, Mirror Node subscription. |
+| **Smart Escrow** | Hedera Smart Contracts enforce conditional payouts (banks, municipalities, developers) with multi-sig approvals. | Smart Contract Service + HCS audit logs. |
+| **Document Vault** | E-signed deeds, receipts, and certificates stored on S3; hashes anchored on HCS for integrity. | HFS for key docs, HCS for proof-of-existence. |
+| **Compliance Hub** | AI agents evaluate KYC/KYB, sanctions, and municipal requirements, writing outcomes to the Compliance Oracle. | HCS hash of decisions; optional DID integration. |
+| **Investment Marketplace** | Developers list projects; investors buy fractions; stablecoin/bank rails handle payments. | HTS for token transfers, HCS for offer logs. |
+| **Wallet Connect** | HashPack + HashConnect handle user pairing. Backend verifies signatures and issues JWT sessions. | Accounts linked to HTS tokens / escrow interactions. |
+
+---
+
+## 🧰 Developer Quickstart
 
 ### Prerequisites
 
-Install the following locally:
+* Node.js v20+
+* PostgreSQL (Supabase, Neon, RDS, or local)
+* Redis (Redis Cloud Essentials or local)
+* HashPack Wallet (extension/app)
+* Hedera Testnet operator account (ID & private key)
 
-* **Node.js** ≥ 20.x and **npm** ≥ 9.x
-* **PostgreSQL** ≥ 14 (cloud or local). If using Supabase/Neon/etc., have the connection string ready.
-* **Redis** (local or cloud). Redis Cloud Essentials (as in the screenshot) works great.
-* **Git** ≥ 2.34
-* **Hedera Testnet credentials** – Operator account ID + private key for deploying contracts and minting tokens.
-* **Wallet (HashPack)** – Chrome extension or desktop app for user pairing.
-* Optional: Docker (if you want to run Postgres/Redis locally via containers).
-
-### Repository Setup
+### Installation
 
 ```bash
 git clone https://github.com/<your-org>/EquiXTokenCapital.git
 cd EquiXTokenCapital
-```
 
-Install dependencies:
-
-```bash
-# Backend dependencies
+# Backend
 cd backend
 npm install
 
-# Frontend dependencies
+# Frontend
 cd ../frontend
 npm install
 ```
 
-### Environment Configuration
-
-Create `.env` files in both `backend/` and `frontend/`. Examples:
+### Environment Variables
 
 `backend/.env`
 
@@ -89,7 +159,7 @@ Create `.env` files in both `backend/` and `frontend/`. Examples:
 DATABASE_URL=postgres://USER:PASSWORD@HOST:PORT/DATABASE?sslmode=require
 REDIS_URL=redis://default:REDIS_PASSWORD@HOST:PORT
 
-JWT_SECRET=replace-with-strong-secret
+JWT_SECRET=super-strong-secret
 IDEMPOTENCY_TTL_SECONDS=86400
 REFRESH_TOKEN_TTL_SECONDS=604800
 
@@ -108,12 +178,8 @@ S3_ACCESS_KEY_ID=your-access-key
 S3_SECRET_ACCESS_KEY=your-secret
 S3_BUCKET=equix-docs
 
-KYC_PROVIDER_API_KEY=replace-if-available
+KYC_PROVIDER_API_KEY=optional-provider-key
 AI_SERVICE_ENDPOINT=https://ai.internal/equix
-
-FEATURE_MARKETPLACE=true
-FEATURE_CUSTODIAL_WALLETS=true
-FEATURE_GUARDIAN=false
 ```
 
 `frontend/.env.local`
@@ -127,11 +193,7 @@ NEXT_PUBLIC_HASHCONNECT_APP_ID=your-hashconnect-app-id
 NEXT_PUBLIC_TENANT_ID=default-tenant
 ```
 
-> **Note:** Replace placeholders with the credentials you provision (Supabase, Redis Cloud, AWS S3, etc.).
-
-### Database Migration & Prisma Client
-
-Once PostgreSQL is reachable:
+### Database & Prisma
 
 ```bash
 cd backend
@@ -139,86 +201,100 @@ npx prisma migrate dev --schema src/db/schema.prisma --name init
 npx prisma generate --schema src/db/schema.prisma
 ```
 
-This sets up tables for tenants, cases, documents, escrow, tokens, offerings, audits, etc.
-
-### Running Backend + Frontend
-
-In one terminal:
+### Run Services
 
 ```bash
+# Backend
 cd backend
+npm run dev
+
+# Frontend
+cd ../frontend
 npm run dev
 ```
 
-In another:
-
-```bash
-cd frontend
-npm run dev
-```
-
-Visit **http://localhost:3000** to access the application. The backend listens on **http://localhost:4000** by default.
+Visit **http://localhost:3000** (frontend) and **http://localhost:4000** (backend APIs).
 
 ---
 
-## Hedera REST & Smart Contract Endpoints
+## 🔐 Hedera REST & Smart Contract Endpoints
 
-The backend interacts with Hedera services via the following REST/gRPC endpoints:
+| Service | Endpoint / Usage | Purpose |
+|---------|------------------|---------|
+| Mirror Node REST | `https://testnet.mirrornode.hedera.com/api/v1` | Query tokens, transactions, account states for audit trails. |
+| Hedera Token Service | `@hashgraph/sdk` `TokenCreateTransaction`, `TokenMintTransaction`, etc. | Mint Title Twins, fractional FT issuance, freeze/whitelist operations. |
+| Smart Contracts | `ContractCreateTransaction`, `ContractExecuteTransaction` | Deploy/register escrow & revenue contracts; execute conditional releases. |
+| Consensus Service | `TopicMessageSubmitTransaction` | Anchor OTP hashes, compliance decisions, municipal approvals. |
+| File Service | `FileCreateTransaction` | Store signed deeds, share certificates alongside encrypted S3 objects. |
 
-| Service | Endpoint                                                                 | Purpose                                                              |
-|---------|--------------------------------------------------------------------------|----------------------------------------------------------------------|
-| Mirror Node REST | `https://testnet.mirrornode.hedera.com/api/v1`                         | Query transactions, token balances, event logs for compliance audits |
-| HTS             | SDK interactions via `@hashgraph/sdk`                            | Mint/burn/freeze title twins & fractions                             |
-| Smart Contracts | SDK → `ContractCreateTransaction` / `ContractExecuteTransaction` | Deploy & call escrow, registry, revenue distribution contracts        |
-| Consensus (HCS) | `TopicMessageSubmitTransaction`                                  | Append hashes of OTP/KYC docs, escrow milestones, AI decisions        |
-
-Smart-contract deployment scripts live under `backend/scripts/hedera-deploy.ts`. To deploy:
+Deployment scripts: `backend/scripts/compile-contracts.ts`, `backend/scripts/hedera-deploy.ts`.
 
 ```bash
 cd backend
-npm run compile      # compile Solidity -> artifacts
-npm run hedera:deploy
+npm run compile        # Solidity -> artifacts
+npm run hedera:deploy  # Upload bytecode + deploy contracts
 ```
 
-This uploads bytecode to HFS, creates contracts, mints mock tokens, and writes deployment manifests to `backend/deployments/`.
+Deployment outputs are written to `backend/deployments/hedera-<network>.json`.
 
 ---
 
-## Development Scripts
+## 🧭 API Overview (selected endpoints)
 
-| Command                         | Description                                                 |
-|---------------------------------|-------------------------------------------------------------|
-| `npm run dev` (frontend/backend)| Start development servers                                   |
-| `npm run build`                 | Build production bundle                                     |
-| `npm run lint`                  | ESLint checks                                               |
-| `npm run compile` (backend)     | Compile Solidity contracts via `scripts/compile-contracts`  |
-| `npm run hedera:deploy`         | Deploy compiled contracts to Hedera                         |
-| `npm run prisma:migrate`        | (alias) Apply Prisma migrations once database is set        |
+| Method & Endpoint | Description |
+|-------------------|-------------|
+| `POST /api/tokenize` | Tokenise a property record (creates HTS token + registry entry). |
+| `POST /api/transfer` | Execute smart escrow transfer between buyer/seller after approvals. |
+| `POST /api/verify` | Run KYC/compliance checks and log outcome. |
+| `GET /api/registry/:id` | Retrieve property registry + title twin metadata. |
+| `GET /api/marketplace` | Fetch active investment listings & developer offerings. |
+| `GET /api/v1/cases` | Retrieve cases with parties, documents, escrow status. |
+| `POST /api/v1/escrows` | Create programmable escrow linked to a case. |
+| `POST /api/v1/wallet/session` | Validate HashConnect pairing signature and issue JWT. |
 
----
-
-## Roadmap & Next Steps
-
-* **Wallet Auth** – Complete HashConnect pairing -> backend session -> JWT storage.
-* **Escrow UX** – embed creation wizard, funding/statement actions in case detail pages.
-* **Doc/KYC AI integrations** – connect real S3 + provider APIs (defaults are stubbed).
-* **Automated Tests + CI** – add backend unit/integration tests, frontend component/E2E tests, and CI workflows (GitHub Actions example coming).
-* **Deployment Playbook** – containerise backend/frontend, configure infra (Postgres, Redis, S3, Hedera secrets) via Terraform/Helm.
+> Full API documentation is auto-generated from the Express routes (Swagger integration planned).
 
 ---
 
-## Contributing
+## 🧪 Development Scripts
 
-1. Fork or clone the repo.
-2. Create a feature branch (`git checkout -b feature/my-update`).
-3. Add tests/documentation where relevant.
-4. Submit a PR describing the change and include screenshots for UI work.
-
-Please open GitHub issues for bugs or feature requests.
+| Command                      | Description |
+|------------------------------|-------------|
+| `npm run dev` (frontend/backend) | Start development servers |
+| `npm run build`              | Build production bundles |
+| `npm run lint`               | ESLint check |
+| `npm run test` (backend WIP) | Execute unit/integration tests |
+| `npm run compile` (backend)  | Compile Solidity contracts |
+| `npm run hedera:deploy`      | Deploy contracts to Hedera testnet |
 
 ---
 
-## License
+## 🤖 Roadmap for Engineers
 
-Proprietary – © EquiXToken Capital. All rights reserved. Contact the team for partnership and commercial licensing inquiries.
+1. **HashConnect Auth Flow** – Finish pairing UX, store backend-issued JWT, disable dev bypass.
+2. **Escrow Enhancements** – In-app creation wizard, bank/stablecoin funding flows, statement uploads.
+3. **Document/KYC AI Integration** – Connect real provider APIs (KYC, OCR, sanctions) and surface status in case tabs.
+4. **Automated Tests & CI** – Add backend unit/integration tests, frontend component/E2E tests (Vitest/Playwright), wire GitHub Actions.
+5. **Deployment Runbook** – Containerise backend/frontend, configure Terraform modules for Postgres/Redis/S3/Hedera secrets.
 
+---
+
+## 🤝 Contributing
+
+1. Fork or clone the repository.
+2. Create a feature branch: `git checkout -b feature/my-improvement`.
+3. Commit with descriptive messages and add tests/docs where relevant.
+4. Open a pull request; include screenshots for UI changes and describe Hedera impacts if any.
+
+We welcome developers, designers, conveyancers, and compliance experts to shape the platform.
+
+---
+
+## 📄 License
+
+**MIT License © 2025 EquiXToken Capital.**  
+Commercial use, white-label licensing, and strategic partnerships: contact the EquiXToken Capital team.
+
+---
+
+> “EquiXToken Capital is breaking the barriers of property ownership—turning real estate into programmable, inclusive, and liquid assets for the African continent and beyond.” 🏡✨
