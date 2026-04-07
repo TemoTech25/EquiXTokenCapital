@@ -69,6 +69,25 @@ export class DocumentsService {
     };
   }
 
+
+  async getDocuments(user: AuthUser) {
+    const where = [Role.ADMIN, Role.CONVEYANCER, Role.AGENT].includes(user.role)
+      ? {}
+      : { ownerId: user.sub };
+
+    const documents = await this.documentsRepository.find({
+      where,
+      order: { createdAt: 'DESC' },
+    });
+
+    return Promise.all(
+      documents.map(async (document) => ({
+        ...document,
+        signedUrl: await this.buildSignedUrl(document.fileUrl),
+      })),
+    );
+  }
+
   async getDocumentById(id: string, user: AuthUser) {
     const document = await this.documentsRepository.findOne({ where: { id } });
 

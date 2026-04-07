@@ -46,6 +46,11 @@ export class DocumentsController {
     return this.documentsService.uploadDocument(dto, file, req.user);
   }
 
+  @Get()
+  async getDocuments(@Req() req: AuthenticatedRequest) {
+    return this.documentsService.getDocuments(req.user);
+  }
+
   @Get(':id')
   async getById(@Req() req: AuthenticatedRequest, @Param('id', new ParseUUIDPipe()) id: string) {
     return this.documentsService.getDocumentById(id, req.user);
