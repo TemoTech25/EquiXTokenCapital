@@ -34,6 +34,7 @@ import { AnalyticsModule } from './analytics/analytics.module';
 import { AiModule } from './ai/ai.module';
 import { BlockchainModule } from './blockchain/blockchain.module';
 import { BlockchainTokenRecord } from './blockchain/blockchain-token.entity';
+import { AdminModule } from './admin/admin.module';
 
 @Module({
   imports: [
@@ -66,6 +67,7 @@ import { BlockchainTokenRecord } from './blockchain/blockchain-token.entity';
     AnalyticsModule,
     AiModule,
     BlockchainModule,
+    AdminModule,
   ],
 })
 export class AppModule {}
