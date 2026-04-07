@@ -6,6 +6,7 @@ import {
   ParseUUIDPipe,
   Patch,
   Post,
+  Query,
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
@@ -30,6 +31,11 @@ export class KycController {
   )
   async upload(@Body() dto: UploadKycDto, @UploadedFile() file: Express.Multer.File) {
     return this.kycService.upload(dto, file);
+  }
+
+  @Get('status')
+  async statusByQuery(@Query('user_id', new ParseUUIDPipe()) userId: string) {
+    return this.kycService.status(userId);
   }
 
   @Get('status/:user_id')

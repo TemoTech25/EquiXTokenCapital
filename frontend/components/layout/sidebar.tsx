@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Building2, FileText, LayoutDashboard, Shield, ShieldCheck, Workflow, Handshake, Wallet } from 'lucide-react';
+import { Building2, FileText, LayoutDashboard, Shield, ShieldCheck, Workflow, Handshake, Wallet, BadgeCheck } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const navItems = [
@@ -9,6 +9,7 @@ const navItems = [
   { href: '/ownership', label: 'Ownership', icon: ShieldCheck },
   { href: '/documents', label: 'Documents', icon: FileText },
   { href: '/payments', label: 'Payments', icon: Wallet },
+  { href: '/kyc', label: 'KYC', icon: BadgeCheck },
   { href: '/admin', label: 'Admin', icon: Shield },
   { href: '/auth', label: 'Auth', icon: Building2 }
 ];
