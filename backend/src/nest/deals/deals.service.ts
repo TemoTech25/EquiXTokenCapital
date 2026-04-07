@@ -52,6 +52,19 @@ export class DealsService {
     return this.dealsRepository.save(deal);
   }
 
+  async getAll(): Promise<Deal[]> {
+    return this.dealsRepository.find({
+      relations: {
+        property: true,
+        buyer: true,
+        seller: true,
+        agent: true,
+        conveyancer: true,
+      },
+      order: { createdAt: 'DESC' },
+    });
+  }
+
   async getById(id: string): Promise<Deal> {
     const deal = await this.dealsRepository.findOne({
       where: { id },

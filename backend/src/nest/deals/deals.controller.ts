@@ -11,6 +11,11 @@ export class DealsController {
     return this.dealsService.create(dto);
   }
 
+  @Get()
+  async getAll() {
+    return this.dealsService.getAll();
+  }
+
   @Get(':id')
   async getById(@Param('id', new ParseUUIDPipe()) id: string) {
     return this.dealsService.getById(id);
