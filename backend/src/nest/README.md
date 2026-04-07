@@ -20,6 +20,7 @@
 - Controlled secondary ownership transfers with approval workflow and KYC compliance checks
 - Analytics and reporting module with aggregation-based platform metrics
 - AI-assisted automation for document parsing, workflow suggestions, and risk flags
+- Hedera blockchain integration with off-chain fallback for token mint/transfer
 
 ## Endpoints
 - `POST /auth/register`
@@ -62,6 +63,9 @@
 - `GET /analytics/users`
 - `POST /ai/parse-document`
 - `GET /ai/suggestions/:deal_id`
+- `POST /blockchain/mint`
+- `POST /blockchain/transfer`
+- `GET /blockchain/:asset_id`
 
 ## Required environment variables
 - `DATABASE_URL` (PostgreSQL connection string)
@@ -78,12 +82,15 @@
 - `SMILE_IDENTITY_ENDPOINT` (optional, external KYC API endpoint)
 - `SMILE_IDENTITY_API_KEY` (optional, external KYC API key)
 - `OPENAI_API_KEY` (optional, enables AI parsing via OpenAI)
+- `HEDERA_NETWORK` (optional, `testnet` by default)
+- `HEDERA_OPERATOR_ID` (optional, enables on-chain execution)
+- `HEDERA_OPERATOR_KEY` (optional, enables on-chain execution)
 
 ## Run
 1. Add dependencies (if not already installed):
    - `@nestjs/common`, `@nestjs/core`, `@nestjs/config`, `@nestjs/jwt`, `@nestjs/passport`
    - `@nestjs/typeorm`, `typeorm`, `pg`, `passport-jwt`, `class-validator`, `class-transformer`, `bcrypt`
-2. Run SQL migrations in `database/001_create_users.sql`, `database/002_create_properties_and_deals.sql`, `database/003_create_transactions.sql`, `database/004_create_managed_documents.sql`, `database/005_create_ownership_records.sql`, `database/006_create_offchain_tokens.sql`, `database/007_create_notifications.sql`, `database/008_create_payments_and_audit_logs.sql`, `database/009_create_kyc_records.sql`, `database/010_create_spvs.sql`, `database/011_create_investments.sql`, and `database/012_create_ownership_transfers.sql`.
+2. Run SQL migrations in `database/001_create_users.sql`, `database/002_create_properties_and_deals.sql`, `database/003_create_transactions.sql`, `database/004_create_managed_documents.sql`, `database/005_create_ownership_records.sql`, `database/006_create_offchain_tokens.sql`, `database/007_create_notifications.sql`, `database/008_create_payments_and_audit_logs.sql`, `database/009_create_kyc_records.sql`, `database/010_create_spvs.sql`, `database/011_create_investments.sql`, `database/012_create_ownership_transfers.sql`, and `database/013_create_blockchain_tokens.sql`.
 3. Start from `src/nest/main.ts`.
 
 

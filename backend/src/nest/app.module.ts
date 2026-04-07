@@ -32,6 +32,8 @@ import { TransfersModule } from './transfers/transfers.module';
 import { TransferRequest } from './transfers/transfer-request.entity';
 import { AnalyticsModule } from './analytics/analytics.module';
 import { AiModule } from './ai/ai.module';
+import { BlockchainModule } from './blockchain/blockchain.module';
+import { BlockchainTokenRecord } from './blockchain/blockchain-token.entity';
 
 @Module({
   imports: [
@@ -43,7 +45,7 @@ import { AiModule } from './ai/ai.module';
       useFactory: (configService: ConfigService) => ({
         type: 'postgres',
         url: configService.getOrThrow<string>('DATABASE_URL'),
-        entities: [User, Property, Deal, Transaction, ManagedDocument, OwnershipRecord, OffchainToken, Notification, Payment, PaymentAuditLog, KycRecord, Spv, SpvShareAllocation, Investment, TransferRequest],
+        entities: [User, Property, Deal, Transaction, ManagedDocument, OwnershipRecord, OffchainToken, Notification, Payment, PaymentAuditLog, KycRecord, Spv, SpvShareAllocation, Investment, TransferRequest, BlockchainTokenRecord],
         synchronize: false,
       }),
     }),
@@ -63,6 +65,7 @@ import { AiModule } from './ai/ai.module';
     TransfersModule,
     AnalyticsModule,
     AiModule,
+    BlockchainModule,
   ],
 })
 export class AppModule {}
