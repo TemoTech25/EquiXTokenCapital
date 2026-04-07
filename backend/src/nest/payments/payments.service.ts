@@ -48,6 +48,12 @@ export class PaymentsService {
     });
   }
 
+  async getAll(): Promise<Payment[]> {
+    return this.paymentsRepository.find({
+      order: { createdAt: 'DESC' },
+    });
+  }
+
   async getByDealId(dealId: string): Promise<Payment[]> {
     return this.paymentsRepository.find({
       where: { dealId },

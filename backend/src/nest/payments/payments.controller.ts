@@ -12,6 +12,11 @@ export class PaymentsController {
     return this.paymentsService.initiate(dto);
   }
 
+  @Get()
+  async getAll() {
+    return this.paymentsService.getAll();
+  }
+
   @Get(':deal_id')
   async getByDeal(@Param('deal_id', new ParseUUIDPipe()) dealId: string) {
     return this.paymentsService.getByDealId(dealId);
