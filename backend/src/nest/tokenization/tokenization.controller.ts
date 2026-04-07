@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, ParseUUIDPipe, Post } from '@nestjs/common';
 import { TokenizationService } from './tokenization.service';
 import { MintTokenDto } from './dto/mint-token.dto';
 import { TransferTokenDto } from './dto/transfer-token.dto';
@@ -15,5 +15,10 @@ export class TokenizationController {
   @Post('transfer')
   async transfer(@Body() dto: TransferTokenDto) {
     return this.tokenizationService.transfer(dto);
+  }
+
+  @Get(':asset_id')
+  async byAsset(@Param('asset_id', new ParseUUIDPipe()) assetId: string) {
+    return this.tokenizationService.byAsset(assetId);
   }
 }

@@ -125,6 +125,25 @@ export class TokenizationService {
     });
   }
 
+
+  async byAsset(assetId: string) {
+    const tokens = await this.tokensRepository.find({ where: { assetId } });
+    const balances = tokens.map((token) => ({
+      id: token.id,
+      ownerId: token.ownerId,
+      amount: Number(token.amount),
+      type: token.type,
+    }));
+
+    const totalTokensIssued = this.sum(balances.map((token) => token.amount));
+
+    return {
+      assetId,
+      totalTokensIssued,
+      balances,
+    };
+  }
+
   private async syncOwnershipFromTokens(
     manager: EntityManager,
     assetId: string,
